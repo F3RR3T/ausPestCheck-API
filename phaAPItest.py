@@ -14,12 +14,15 @@ from random import randint
 import requests as req
 #payloadtemplate = dict(bar = 'foo')
 
+with open('myKeys.txt', 'r') as keyfile:
+  subscriptionKey = keyfile.readline().strip()
+  participantKey = keyfile.readline().strip()
 ####################################
 def setKey():
   headers = {
       # Request headers
       'Content-Type': 'application/json',
-      'Ocp-Apim-Subscription-Key': '76d5b3d3f92c40e5b3c24f7a02032296'
+      'Ocp-Apim-Subscription-Key': subscriptionKey
   }
   return headers
 
@@ -135,7 +138,7 @@ def getData(headers):
 def uploadObs(payload):
    
   params = urllib.parse.urlencode({
-      'participant-key': 'mqay+zhhAz8M3LnFFmdrVXL+wzKLfcpIEK/ns4ynVGQ='
+      'participant-key': participantKey
   })
 
   body = json.dumps(payload)
