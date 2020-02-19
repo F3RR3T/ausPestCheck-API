@@ -19,13 +19,11 @@ with open('myKeys.txt', 'r') as keyfile:
   subscriptionKey = keyfile.readline().strip()
   participantKey = keyfile.readline().strip()
 ####################################
-def setKey():
-  headers = {
-      # Request headers
-      'Content-Type': 'application/json',
-      'Ocp-Apim-Subscription-Key': subscriptionKey
-  }
-  return headers
+headers = {
+  # Request headers
+  'Content-Type': 'application/json',
+  'Ocp-Apim-Subscription-Key': subscriptionKey
+}
 
 ####################################
 #def templateUploadPayload(tags):
@@ -159,7 +157,7 @@ def uploadObs(payload):
     conn.close()
 
 ####################################
-headers = setKey()
+#headers = setKey()
 #tags = ['uid', 'dateOfActivity', 'entityName', 'status', 'latitude', 'longitude']
 #payloadtemplate = templateUploadPayload(tags)
 
