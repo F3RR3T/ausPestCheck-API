@@ -14,6 +14,7 @@ from random import randint
 import requests as req
 #payloadtemplate = dict(bar = 'foo')
 
+# put sub key and partic key in a text file, one key on each line
 with open('myKeys.txt', 'r') as keyfile:
   subscriptionKey = keyfile.readline().strip()
   participantKey = keyfile.readline().strip()
