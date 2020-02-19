@@ -115,25 +115,6 @@ def writeObs(payload):
   f.close()
   return
 ####################################
-def getData(headers):
-  params = urllib.parse.urlencode({
-  })
-  
-  print('params: ' + params)
-  
-  try:
-      conn = http.client.HTTPSConnection('apim-apcplus-uat.azure-api.net')
-      print('connected')
-      conn.request("GET", "/pha-cent/api/retrieve?%s" % params, "{body}", headers)
-      response = conn.getresponse()
-      print(response)
-      data = response.read()
-      print(data)
-      conn.close()
-  except Exception as e:
-      print("[Errno {0}] {1}".format(e.errno, e.strerror))
-    
-####################################
 def uploadObs(payload):
    
   params = urllib.parse.urlencode({
