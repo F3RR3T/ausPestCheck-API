@@ -21,6 +21,7 @@ with open('myKeys.txt', 'r') as keyfile:
 ####################################
 headers = {
   # Request headers
+  'participant-key': participantKey,
   'Content-Type': 'application/json',
   'Ocp-Apim-Subscription-Key': subscriptionKey
 }
@@ -32,11 +33,11 @@ headers = {
 #  return payload
 
 ####################################
-def createPayload(num = 3, state = 'WA', pestID='C'):
+def createPayload(num = 3, state = 'WA', pestID='C', statusProbs = (10, 70,20)):
   payload = []
   pest = getPest(pestID)
   for i in range(num):
-    status = randStatus()
+    status = randStatus(statusProbs)
     obs = populateObs(state, pest, status)
     payload.append(obs)
   return payload
@@ -53,10 +54,9 @@ def getPest(pestID):
   return (pest.get(pestID) if pest.get(pestID) else 'Ceratitis capitata')
    
 ####################################
-def randStatus():
+def randStatus(probs):
   st = []
   statuses = ('Present', 'Absent', 'Inconclusive')
-  probs = (10, 85, 5)
   for s, p in zip(statuses, probs):
     st.extend([s] * p)
   myStatus = st[randint(0,99)]
@@ -118,15 +118,13 @@ def writeObs(payload):
 def uploadObs(payload):
    
   params = urllib.parse.urlencode({
-      'participant-key': participantKey
   })
-
   body = json.dumps(payload)
 #  print(body)
   try:
     conn = http.client.HTTPSConnection('apim-apcplus-uat.azure-api.net')
     print('connected')
-    conn.request("POST", "/pha-cent/api/upload-processor?%s" % params, body, headers)
+    conn.request("POST", "/pha-central/api/surveillance-records?%s" % params, body, headers)
     response = conn.getresponse()
 #    print(response)
 #    data = response.read()
