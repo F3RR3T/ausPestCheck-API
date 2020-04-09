@@ -15,7 +15,7 @@ import requests as req
 #payloadtemplate = dict(bar = 'foo')
 
 # put sub key and partic key in a text file, one key on each line
-with open('myKeys.txt', 'r') as keyfile:
+with open('mykeys.txt', 'r') as keyfile:
   subscriptionKey = keyfile.readline().strip()
   participantKey = keyfile.readline().strip()
 ####################################
@@ -64,12 +64,15 @@ def randStatus(probs):
   
 ####################################
 def populateObs(state, pest, status):
+#  progs = {'testProgram'}
   observation = {}
   observation['uid'] = str(uuid4())
   observation['dateOfActivity'] = dt.datetime.now().strftime("%Y-%m-%d")
   observation['entityName'] = pest
   observation['status'] = status       
   observation['latitude'], observation['longitude'] = stateLoc(state)
+  observation['programs'] = ('CENT'),
+  observation['surveillanceType'] = 'string'
   return observation
 
 ####################################
@@ -115,25 +118,29 @@ def writeObs(payload):
   f.close()
   return
 ####################################
-def uploadObs(payload):
+def uploadObs(payload, verbose = False):
    
   params = urllib.parse.urlencode({
   })
-  body = json.dumps(payload)
-#  print(body)
-  try:
-    conn = http.client.HTTPSConnection('apim-apcplus-uat.azure-api.net')
-    print('connected')
-    conn.request("POST", "/pha-central/api/surveillance-records?%s" % params, body, headers)
-    response = conn.getresponse()
-#    print(response)
-#    data = response.read()
-    print(response.status, response.reason)
-  except Exception as e:
-    print("[Errno {0}] {1}".format(e.errno, e.strerror))
-    print(type(e), e)
-  finally:
-    conn.close()
+  while len(payload):
+        
+    if verbose: print(payload[0])
+    body = json.dumps(payload.pop())
+    if verbose: print(body)
+    try:
+      conn = http.client.HTTPSConnection('apim-apcplus-uat.azure-api.net')
+      print('\nConnected')
+      conn.request("POST", "/pha-central/api/surveillance-records?%s" % params, body, headers)
+      response = conn.getresponse()
+  #    print(response)
+      data = response.read()
+      print(response.status, response.reason)
+      if verbose: print(data)
+    except Exception as e:
+      print("[Errno {0}] {1}".format(e.errno, e.strerror))
+      print(type(e), e)
+    finally:
+      conn.close()
 
 ####################################
 #headers = setKey()
